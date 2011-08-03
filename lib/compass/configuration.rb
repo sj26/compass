@@ -24,6 +24,7 @@ module Compass
       attributes_for_directory(:fonts),
       attributes_for_directory(:extensions, nil),
       # Compilation options
+      :sprite_search_path,
       :output_style,
       :environment,
       :relative_assets,
@@ -38,7 +39,8 @@ module Compass
       :color_output,
       :preferred_syntax,
       :disable_warnings,
-      :sprite_engine
+      :sprite_engine,
+      :chunky_png_options
     ].flatten
 
     # Registers a new configuration property.

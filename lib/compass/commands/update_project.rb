@@ -34,7 +34,8 @@ module Compass
         compiler = new_compiler_instance
         check_for_sass_files!(compiler)
         compiler.clean! if compiler.new_config?
-        compiler.run
+        error_count = compiler.run
+        failed! if error_count > 0
       end
 
       def check_for_sass_files!(compiler)
@@ -51,12 +52,10 @@ module Compass
 
       def new_compiler_instance(additional_options = {})
         @compiler_opts ||= begin
-          compiler_opts = Compass.sass_engine_options
-          compiler_opts.merge!(:force => options[:force],
-                               :sass_files => explicit_sass_files,
-                               :dry_run => options[:dry_run])
-          compiler_opts[:quiet] = options[:quiet] if options[:quiet]
-          compiler_opts[:time] = options[:time] if options[:time]
+          compiler_opts = {:sass => Compass.sass_engine_options}
+          compiler_opts.merge!(options)
+          compiler_opts[:sass_files] = explicit_sass_files
+          compiler_opts[:cache_location] = determine_cache_location
           compiler_opts
         end
 

@@ -10,7 +10,7 @@ module Compass
         :stand_alone
       end
 
-      def http_path_without_default
+      def default_http_path
         "/"
       end
 
@@ -88,6 +88,10 @@ module Compass
       def default_http_images_dir
         top_level.images_dir
       end
+      
+      def default_sprite_search_path
+        [top_level.images_path]
+      end
 
       def default_http_images_path
         http_root_relative top_level.http_images_dir
@@ -131,6 +135,10 @@ module Compass
       
       def default_sprite_engine
         :chunky_png
+      end
+      
+      def default_chunky_png_options
+        {:compression => Zlib::BEST_COMPRESSION}
       end
       
       # helper functions

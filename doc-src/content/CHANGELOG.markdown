@@ -14,6 +14,53 @@ The Documentation for the [latest stable release](http://compass-style.org/docs/
 
 The Documentation for the [latest preview release](http://beta.compass-style.org/)
 
+0.11.5 (07/10/2011)
+-------------------
+
+* Updated the list of elements returned by the `elements-of-type()` helper.
+  It now understands `html5-block` and `html5-inline` and other types now
+  return html5 elements in them by default.
+* Fix warning logic in vertical-rhythms module.
+* Fix typo in the css3/transition module.
+
+0.11.4 (07/03/2011)
+-------------------
+
+* Vertical rhythm now supports absolute units like pixels.
+  Set `$relative-font-sizing` to `false` to enable.
+* Vertical rhythm now has a minimum padding that defaults to 2px.
+  This makes some edge cases look better.
+* New mixin `force-wrap` prevents URLs and long lines of text from breaking layouts.
+* Fix absolute path detection on windows.
+* Fix the mime type returned for inline svg images.
+* Allow multiple transitions in the CSS3 `transition` mixin.
+* The Blueprint `:focus` styles no longer clobbers cascade-based overrides unnecessarily.
+* The Blueprint grid-background vertical rhythm is now based off of $blueprint-font-size,
+  rather than a static value of 20px
+
+0.11.3 (06/11/2011)
+-------------------
+
+**Note:** Due to some internal changes to compass you may have issue with your sass cache. Run `compass clean` to clear your cache.
+
+* The `pie-clearfix` mixin has been updated. If you have to
+  support Firefox < 3.5, please update your stylesheets
+  to use `legacy-pie-clearfix` instead.
+* Added a new command: `compass clean` which removes any generated
+  css files and clears the sass cache.
+* Enable IE 10 support for flexible box with the -ms prefix.
+* A small change to how generated sprites are named for better
+  rails 3.1 compatibility.
+* Fixes for the compass --quiet mode.
+* It is now possible to generate cache buster urls that manipulate
+  the path of the image instead of the query string. This makes
+  images work better with proxies, but will require some web server
+  configuration. [Docs](/help/tutorials/configuration-reference/#asset-cache-buster)
+* Numerous small bug fixes to sprites.
+* Sprite Engines are now classes see [Docs](/help/tutorials/extending) for more information
+* Sprite classes have bee re-factored into modules for readability
+* Sprites will no longer cause `undefined method 'find' for #<Compass::SpriteMap>` when adding or removing sprite files
+
 0.11.2 (06/10/2011)
 -------------------
 * Sprites will now by default remove any old versions of the sprite. A new configuration

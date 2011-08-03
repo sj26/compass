@@ -71,7 +71,7 @@ class SpritesTest < Test::Unit::TestCase
       }
     CSS
     assert_equal image_size('squares-s*.png'), [20, 30]
-    assert_equal image_md5('squares-s*.png'), 'fcc93d7b279c2ad6898fbca49cbd01e1'
+    assert_equal image_md5('squares-s*.png'), '7349a0f4e88ea80abddcf6ac2486abe3'
   end
 
   it "should generate sprite classes with dimensions" do
@@ -294,7 +294,7 @@ class SpritesTest < Test::Unit::TestCase
       }
     CSS
     assert_equal image_size('squares-s*.png'), [20, 30]
-    assert_equal image_md5('squares-s*.png'), '652b67f5e9092520d6f26caae7e18012'
+    assert_equal image_md5('squares-s*.png'), '9cc7ce48cfaf304381c2d08adefd2fb6'
   end
 
   it "should use position adjustments in mixins" do
@@ -332,7 +332,7 @@ class SpritesTest < Test::Unit::TestCase
       }
     CSS
     assert_equal image_size('squares-s*.png'), [20, 30]
-    assert_equal image_md5('squares-s*.png'), '652b67f5e9092520d6f26caae7e18012'
+    assert_equal image_md5('squares-s*.png'), '9cc7ce48cfaf304381c2d08adefd2fb6'
   end
 
   it "should repeat the image" do
@@ -355,7 +355,7 @@ class SpritesTest < Test::Unit::TestCase
       }
     CSS
     assert_equal image_size('squares-s*.png'), [20, 30]
-    assert_equal image_md5('squares-s*.png'), '94abae8440f1b58617f52920b70aaed2'
+    assert_equal image_md5('squares-s*.png'), 'a77a2fd43f04d791722b706aa7c9f1c1'
   end
 
   it "should allow the position of a sprite to be specified in absolute pixels" do
@@ -379,7 +379,7 @@ class SpritesTest < Test::Unit::TestCase
       }
     CSS
     assert_equal image_size('squares-s*.png'), [30, 30]
-    assert_equal image_md5('squares-s*.png'), '2fb19ef9c83018c93c6f147af3a56cb2'
+    assert_equal image_md5('squares-s*.png'), '9856ced9e8211b6b28ff782019a0d905'
   end
 
   it "should provide a nice errors for lemonade's old users" do
@@ -448,7 +448,7 @@ class SpritesTest < Test::Unit::TestCase
     CSS
   end
 
-  it "should render corret sprite with css selectors via issue#248" do
+  it "should render correct sprite with css selectors via issue#248" do
     css = render <<-SCSS
       @import "selectors/*.png";
       @include all-selectors-sprites;
@@ -472,8 +472,33 @@ class SpritesTest < Test::Unit::TestCase
       }
     CSS
   end
+  
+  it "should honor offsets when rendering selectors via issue#449" do
+    css = render <<-SCSS
+      @import "selectors/*.png";
+      @include all-selectors-sprites($offset-x: 20px, $offset-y: 20px);
+    SCSS
+    assert_correct css, <<-CSS
+      .selectors-sprite, .selectors-ten-by-ten {
+        background: url('/selectors-sedfef809e2.png') no-repeat;
+      }
+      
+      .selectors-ten-by-ten {
+        background-position: 20px 20px;
+      }
+      .selectors-ten-by-ten:hover, .selectors-ten-by-ten.ten-by-ten_hover, .selectors-ten-by-ten.ten-by-ten-hover {
+        background-position: 20px 0;
+      }
+      .selectors-ten-by-ten:target, .selectors-ten-by-ten.ten-by-ten_target, .selectors-ten-by-ten.ten-by-ten-target {
+        background-position: 20px -10px;
+      }
+      .selectors-ten-by-ten:active, .selectors-ten-by-ten.ten-by-ten_active, .selectors-ten-by-ten.ten-by-ten-active {
+        background-position: 20px 10px;
+      }
+    CSS
+  end
 
-  it "should render corret sprite with css selectors via magic mixin" do
+  it "should render correct sprite with css selectors via magic mixin" do
     css = render <<-SCSS
       @import "selectors/*.png";
       a {
@@ -499,6 +524,7 @@ class SpritesTest < Test::Unit::TestCase
       }
     CSS
   end
+
   
   it "should not render corret sprite with css selectors via magic mixin" do
     css = render <<-SCSS
@@ -515,6 +541,33 @@ class SpritesTest < Test::Unit::TestCase
       
       a {
         background-position: 0 0;
+      }
+    CSS
+  end
+
+  it "should render corret sprite with css selectors via magic mixin with the correct offsets" do
+    css = render <<-SCSS
+      @import "selectors/*.png";
+      a {
+        @include selectors-sprite(ten-by-ten, false, 5, -5)
+      }
+    SCSS
+    assert_correct css, <<-CSS
+      .selectors-sprite, a {
+        background: url('/selectors-sedfef809e2.png') no-repeat;
+      }
+      
+      a {
+        background-position: 5px -5px;
+      }
+      a:hover, a.ten-by-ten_hover, a.ten-by-ten-hover {
+        background-position: 5px -25px;
+      }
+      a:target, a.ten-by-ten_target, a.ten-by-ten-target {
+        background-position: 5px -35px;
+      }
+      a:active, a.ten-by-ten_active, a.ten-by-ten-active {
+        background-position: 5px -15px;
       }
     CSS
   end
@@ -602,6 +655,34 @@ class SpritesTest < Test::Unit::TestCase
         background-position: 0 0;
       }
     CSS
+  end
+    
+  it "should create horizontal sprite" do
+    css = render <<-SCSS
+      $squares-layout:horizontal;
+      @import "squares/*.png";
+      .foo {
+        @include sprite-background-position($squares-sprites, "twenty-by-twenty");
+      }
+      .bar {
+        @include sprite-background-position($squares-sprites, "ten-by-ten");
+      }
+    SCSS
+    assert_equal [30, 20], image_size('squares-s*.png')
+    other_css = <<-CSS
+      .squares-sprite {
+        background: url('/squares-s161c60ad78.png') no-repeat;
+      }
+
+      .foo {
+        background-position: -10px 0;
+      }
+
+      .bar {
+        background-position: 0 0;
+      }
+    CSS
+    assert_correct css.gsub("\n", '').gsub(' ', ''), other_css.gsub("\n", '').gsub(' ', '')
   end
 
 end

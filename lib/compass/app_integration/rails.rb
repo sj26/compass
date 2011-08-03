@@ -52,10 +52,20 @@ module Compass
 
       def check_for_double_boot!
         if booted?
-          Compass::Util.compass_warn("Warning: Compass was booted twice. If you're using Rails 3, Compass has a Railtie now; please remove your compass intializer.")
+          Compass::Util.compass_warn("Warning: Compass was booted twice. Compass has a Railtie now; please remove your initializer.")
         else
           booted!
         end
+      end
+
+      def sass_plugin_enabled?
+        unless Sass::Util.ap_geq?('3.1.0.beta')
+          defined?(Sass::Plugin) && !Sass::Plugin.options[:never_update]
+        end
+      end
+
+      def rails_compilation_enabled?
+        Sass::Util.ap_geq?('3.1.0.beta') && defined?(Sass::Rails) # XXX check if there's some other way(s) to disable the asset pipeline.
       end
 
       # Rails 2.x projects use this in their compass initializer.
@@ -65,7 +75,7 @@ module Compass
         Compass.add_project_configuration(config, :project_type => :rails)
         Compass.discover_extensions!
         Compass.configure_sass_plugin!
-        Compass.handle_configuration_change!
+        Compass.handle_configuration_change! if sass_plugin_enabled? || rails_compilation_enabled?
       end
     end
   end

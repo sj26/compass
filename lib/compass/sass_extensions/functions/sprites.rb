@@ -22,7 +22,7 @@ module Compass::SassExtensions::Functions::Sprites
   def sprite_map(glob, kwargs = {})
     kwargs.extend VariableReader
     Compass::SassExtensions::Sprites::SpriteMap.from_uri(glob, self, kwargs)
-  end 
+  end
   Sass::Script::Functions.declare :sprite_map, [:glob], :var_kwargs => true
 
   # Returns the image and background position for use in a single shorthand property:
@@ -34,7 +34,7 @@ module Compass::SassExtensions::Functions::Sprites
   #
   #     background: url('/images/icons.png?12345678') 0 -24px no-repeat;
   def sprite(map, sprite, offset_x = ZERO, offset_y = ZERO)
-    sprite = convert_sprite_name(sprite)
+    sprite = convert_sprite_name(sprite)    
     verify_map(map)
     unless sprite.is_a?(Sass::Script::String)
       raise Sass::SyntaxError, %Q(The second argument to sprite() must be a sprite name. See http://beta.compass-style.org/help/tutorials/spriting/ for more information.)

@@ -66,6 +66,26 @@ module Compass
         def http_stylesheet_path source
           asset_paths.compute_public_path(source, 'stylesheets')
         end
+
+        def default_http_path
+          ::Rails.application.config.assets.prefix
+        end
+
+        def default_http_images_path
+          "#{top_level.http_path}"
+        end
+
+        def default_http_javascripts_path
+          "#{top_level.http_path}"
+        end
+
+        def default_http_fonts_path
+          "#{top_level.http_path}"
+        end
+
+        def default_http_stylesheets_path
+          "#{top_level.http_path}"
+        end
       end
 
       module ConfigurationDefaults
