@@ -28,9 +28,6 @@ module Compass
       @version[:string] << ".#{@version[:patch]}" if @version[:patch]
       @version[:string] << ".#{@version[:state]}" if @version[:state]
       @version[:string] << ".#{@version[:build]}" if @version[:build]
-      if !ENV['OFFICIAL'] && r = revision
-        @version[:string] << ".#{r[0..6]}"
-      end
       @version
     end
 
